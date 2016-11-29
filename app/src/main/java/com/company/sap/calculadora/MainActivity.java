@@ -4,7 +4,9 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,32 +34,32 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        btn1 = (Button)findViewById(R.id.btn1);
-        btn2 = (Button)findViewById(R.id.btn2);
-        btn3 = (Button)findViewById(R.id.btn3);
-        btn4 = (Button)findViewById(R.id.btn4);
-        btn5 = (Button)findViewById(R.id.btn5);
-        btn6 = (Button)findViewById(R.id.btn6);
-        btn7 = (Button)findViewById(R.id.btn7);
-        btn8 = (Button)findViewById(R.id.btn8);
-        btn9 = (Button)findViewById(R.id.btn9);
-        btn0 = (Button)findViewById(R.id.btn0);
+        btn1 = (Button) findViewById(R.id.btn1);
+        btn2 = (Button) findViewById(R.id.btn2);
+        btn3 = (Button) findViewById(R.id.btn3);
+        btn4 = (Button) findViewById(R.id.btn4);
+        btn5 = (Button) findViewById(R.id.btn5);
+        btn6 = (Button) findViewById(R.id.btn6);
+        btn7 = (Button) findViewById(R.id.btn7);
+        btn8 = (Button) findViewById(R.id.btn8);
+        btn9 = (Button) findViewById(R.id.btn9);
+        btn0 = (Button) findViewById(R.id.btn0);
 
-        btnPunto = (Button)findViewById(R.id.btnPunto);
-        btnSuma = (Button)findViewById(R.id.btnSuma);
-        btnResta = (Button)findViewById(R.id.btnResta);
-        btnDiv = (Button)findViewById(R.id.btnDiv);
-        btnMulti = (Button)findViewById(R.id.btnMulti);
-        btnPot = (Button)findViewById(R.id.btnPot);
-        btnRaiz = (Button)findViewById(R.id.btnRaiz);
-        btnIgual = (Button)findViewById(R.id.btnIgual);
+        btnPunto = (Button) findViewById(R.id.btnPunto);
+        btnSuma = (Button) findViewById(R.id.btnSuma);
+        btnResta = (Button) findViewById(R.id.btnResta);
+        btnDiv = (Button) findViewById(R.id.btnDiv);
+        btnMulti = (Button) findViewById(R.id.btnMulti);
+        btnPot = (Button) findViewById(R.id.btnPot);
+        btnRaiz = (Button) findViewById(R.id.btnRaiz);
+        btnIgual = (Button) findViewById(R.id.btnIgual);
 
-        btnDel = (Button)findViewById(R.id.btnDel);
+        btnDel = (Button) findViewById(R.id.btnDel);
 
-        txtResultado = (EditText)findViewById(R.id.txtResultado);
-        txtPrevCalc = (TextView)findViewById(R.id.txtPrevCalc);
+        txtResultado = (EditText) findViewById(R.id.txtResultado);
+        txtPrevCalc = (TextView) findViewById(R.id.txtPrevCalc);
 
-        txtScroll = (HorizontalScrollView)findViewById(R.id.txtScroll);
+        txtScroll = (HorizontalScrollView) findViewById(R.id.txtScroll);
 
 
         btn1.setOnClickListener(new View.OnClickListener() {
@@ -155,22 +157,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!(txtResultado.getSelectionStart() == 0 || txtResultado.getText().toString().substring(txtResultado.getSelectionStart() - 1, txtResultado.getSelectionStart()).equals("√") || txtResultado.getText().toString().substring(txtResultado.getSelectionStart() - 1, txtResultado.getSelectionStart()).equals("∛"))) {
+                if (!txtResultado.getText().toString().contains(".")) {
 
-                    if (!txtResultado.getText().toString().contains(".")) {
+                    if (txtResultado.getSelectionStart() == 0) {
+
+                        txtResultado.getText().insert(txtResultado.getSelectionStart(), "0.");
+
+                    }
+                    else {
 
                         txtResultado.getText().insert(txtResultado.getSelectionStart(), ".");
 
                     }
 
-                }
-                else {
-
-                    if (!txtResultado.getText().toString().contains(".")) {
-
-                        txtResultado.getText().insert(txtResultado.getSelectionStart(), "0.");
-
-                    }
                 }
 
             }
@@ -185,26 +184,15 @@ public class MainActivity extends AppCompatActivity {
                     txtPrevCalc.setText(txtPrevCalc.getText().toString().substring(0, txtPrevCalc.length() - 1));
                     op = 0;
 
-                }
-                else if (TextUtils.isEmpty(txtResultado.getText())) {
+                } else if (TextUtils.isEmpty(txtResultado.getText())) {
 
                     txtPrevCalc.setText("");
                     num1 = 0;
                     op = 0;
 
-                }
-                else if (txtResultado.getSelectionStart() > 0) {
+                } else if (txtResultado.getSelectionStart() > 0) {
 
-                    if (txtResultado.getSelectionStart() == txtResultado.length()) {
-
-                        txtResultado.getText().delete(txtResultado.getSelectionStart() - 1, txtResultado.getSelectionStart());
-
-                    }
-                    else if (!(txtResultado.getText().toString().substring(txtResultado.getSelectionStart(), txtResultado.getSelectionStart() + 1).equals(".") && (txtResultado.getText().toString().substring(txtResultado.getSelectionStart() - 2, txtResultado.getSelectionStart() - 1).equals("√") || txtResultado.getText().toString().substring(txtResultado.getSelectionStart() - 2, txtResultado.getSelectionStart() - 1).equals("∛")))) {
-
-                        txtResultado.getText().delete(txtResultado.getSelectionStart() - 1, txtResultado.getSelectionStart());
-
-                    }
+                    txtResultado.getText().delete(txtResultado.getSelectionStart() - 1, txtResultado.getSelectionStart());
 
                 }
 
@@ -230,84 +218,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
 
-                    if (txtResultado.getText().toString().equals("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
+                    doRoot();
 
-                    switch (op) {
-
-                        case 0:
-
-                            num1 = Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 1:
-
-                            num1 += Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 2:
-
-                            num1 -= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 3:
-
-                            num1 *= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 4:
-
-                            num1 /= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 5:
-
-                            num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
-
-                            break;
-
-                        default:
-                            break;
-
-                    }
+                    switchOP();
 
                 }
 
-                if (String.valueOf(num1).endsWith(".0")) {
-
-                    txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + "+"));
-
-                }
-                else {
-                    txtPrevCalc.setText(String.valueOf(num1 + "+"));
-                }
+                roundnum1("+");
 
                 txtResultado.setText("");
 
@@ -323,113 +240,41 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
+                if (!txtResultado.getText().toString().equals("-") ) {
 
-                    if (txtResultado.getText().toString().equals("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
+                    if (txtResultado.getSelectionStart() > 0) {
 
-                    switch (op) {
+                        doRoot();
 
-                        case 0:
+                        switchOP();
 
-                            num1 = Double.valueOf(txtResultado.getText().toString());
+                        roundnum1("-");
 
-                            break;
-
-                        case 1:
-
-                            num1 += Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 2:
-
-                            num1 -= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 3:
-
-                            num1 *= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 4:
-
-                            num1 /= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 5:
-
-                            num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
-
-                            break;
-
-                        default:
-                            break;
-
-                    }
-
-                    if (String.valueOf(num1).endsWith(".0")) {
-
-                        txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + "-"));
-
-                    }
-                    else {
-                        txtPrevCalc.setText(String.valueOf(num1 + "-"));
-                    }
-                    txtResultado.setText("");
-
-                    txtScroll.smoothScrollTo(txtScroll.getMaxScrollAmount(), 0);
-
-                    op = 2;
-
-                }
-                else {
-
-                    if (TextUtils.isEmpty(txtPrevCalc.getText()) || op != 0) {
-                        txtResultado.setText("-");
-                        txtResultado.setSelection(txtResultado.length());
-                    }
-                    else {
-
-                        if (String.valueOf(num1).endsWith(".0")) {
-
-                            txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + "-"));
-
-                        }
-                        else {
-                            txtPrevCalc.setText(String.valueOf(num1 + "-"));
-                        }
-
-                        txtScroll.scrollTo(txtScroll.getMaxScrollAmount(), 0);
+                        txtResultado.setText("");
 
                         op = 2;
 
                     }
+                    else if (!txtResultado.getText().toString().contains("-")) {
+
+                        if (TextUtils.isEmpty(txtResultado.getText()) && op == 0 && !TextUtils.isEmpty(txtPrevCalc.getText())) {
+
+                            roundnum1("-");
+
+                            op = 2;
+
+                            txtScroll.smoothScrollTo(txtScroll.getMaxScrollAmount(), 0);
+
+                        }
+                        else {
+
+                            txtResultado.setText(String.valueOf("-" + txtResultado.getText()));
+                            txtResultado.setSelection(1);
+
+                        }
+
+                    }
+
                 }
 
             }
@@ -439,86 +284,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (txtResultado.getText().toString().equals("√")) {
-                    txtResultado.setText(String.valueOf(Math.sqrt(num1)));
-                }
-                else if (txtResultado.getText().toString().equals("-√")) {
-                    txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
-                }
-                else if (txtResultado.getText().toString().equals("∛")) {
-                    txtResultado.setText(String.valueOf(Math.cbrt(num1)));
-                }
-                else if (txtResultado.getText().toString().equals("-∛")) {
-                    txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
-                }
-                else if (txtResultado.getText().toString().startsWith("√")) {
-                    txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                }
-                else if (txtResultado.getText().toString().startsWith("-√")) {
-                    txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                }
-                else if (txtResultado.getText().toString().startsWith("∛")) {
-                    txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                }
-                else if (txtResultado.getText().toString().startsWith("-∛")) {
-                    txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                }
-
                 if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
 
-                    switch (op) {
+                    doRoot();
 
-                        case 0:
-
-                            num1 = Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 1:
-
-                            num1 += Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 2:
-
-                            num1 -= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 3:
-
-                            num1 *= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 4:
-
-                            num1 /= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 5:
-
-                            num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
-
-                            break;
-
-                        default:
-                            break;
-
-                    }
+                    switchOP();
 
                 }
 
-                if (String.valueOf(num1).endsWith(".0")) {
-
-                    txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + "x"));
-
-                }
-                else {
-                    txtPrevCalc.setText(String.valueOf(num1 + "x"));
-                }
+                roundnum1("x");
 
                 txtResultado.setText("");
 
@@ -535,84 +309,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
 
-                    if (txtResultado.getText().toString().equals("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
+                    doRoot();
 
-                    switch (op) {
-
-                        case 0:
-
-                            num1 = Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 1:
-
-                            num1 += Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 2:
-
-                            num1 -= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 3:
-
-                            num1 *= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 4:
-
-                            num1 /= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 5:
-
-                            num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
-
-                            break;
-
-                        default:
-                            break;
-
-                    }
+                    switchOP();
 
                 }
 
-                if (String.valueOf(num1).endsWith(".0")) {
-
-                    txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + "÷"));
-
-                }
-                else {
-                    txtPrevCalc.setText(String.valueOf(num1 + "÷"));
-                }
+                roundnum1("÷");
 
                 txtResultado.setText("");
 
@@ -629,84 +332,13 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
 
-                    if (txtResultado.getText().toString().equals("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().equals("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("√")) {
-                        txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-√")) {
-                        txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("∛")) {
-                        txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
-                    else if (txtResultado.getText().toString().startsWith("-∛")) {
-                        txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                    }
+                    doRoot();
 
-                    switch (op) {
-
-                        case 0:
-
-                            num1 = Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 1:
-
-                            num1 += Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 2:
-
-                            num1 -= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 3:
-
-                            num1 *= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 4:
-
-                            num1 /= Double.valueOf(txtResultado.getText().toString());
-
-                            break;
-
-                        case 5:
-
-                            num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
-
-                            break;
-
-                        default:
-                            break;
-
-                    }
+                    switchOP();
 
                 }
 
-                if (String.valueOf(num1).endsWith(".0")) {
-
-                    txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + "^"));
-
-                }
-                else {
-                    txtPrevCalc.setText(String.valueOf(num1 + "^"));
-                }
+                roundnum1("^");
 
                 txtResultado.setText("");
 
@@ -721,14 +353,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!txtResultado.getText().toString().contains("√") && !txtResultado.getText().toString().contains("∛")) {
+                if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
 
-                    if (TextUtils.isEmpty(txtResultado.getText().toString()) || txtResultado.getText().toString().equals("-")) {
+                    if (!txtResultado.getText().toString().contains("√") && !txtResultado.getText().toString().contains("∛")) {
 
-                        txtResultado.setText(String.valueOf(txtResultado.getText().toString() + "√"));
-                        txtResultado.setSelection(txtResultado.length());
-
-                    } else {
+                        if (op == 0 && txtResultado.getText().toString().startsWith("-")) {
+                            op = 1;
+                        }
 
                         switch (op) {
 
@@ -773,17 +404,16 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                        if (String.valueOf(num1).endsWith(".0")) {
-
-                            txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf("."))));
-
-                        } else {
-                            txtPrevCalc.setText(String.valueOf(num1));
-                        }
+                        roundnum1("");
 
                         txtResultado.setText("");
 
                     }
+
+                } else {
+
+                    txtResultado.setText(String.valueOf(txtResultado.getText().toString() + "√"));
+                    txtResultado.setSelection(txtResultado.length());
 
                 }
 
@@ -794,14 +424,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onLongClick(View v) {
 
-                if (!txtResultado.getText().toString().contains("√") && !txtResultado.getText().toString().contains("∛")) {
+                if (!TextUtils.isEmpty(txtResultado.getText().toString()) && !txtResultado.getText().toString().equals("-")) {
 
-                    if (TextUtils.isEmpty(txtResultado.getText().toString()) || txtResultado.getText().toString().equals("-")) {
+                    if (!txtResultado.getText().toString().contains("√") && !txtResultado.getText().toString().contains("∛")) {
 
-                        txtResultado.setText(String.valueOf(txtResultado.getText().toString() + "∛"));
-                        txtResultado.setSelection(txtResultado.length());
-
-                    } else {
+                        if (op == 0 && txtResultado.getText().toString().startsWith("-")) {
+                            op = 1;
+                        }
 
                         switch (op) {
 
@@ -846,17 +475,17 @@ public class MainActivity extends AppCompatActivity {
 
                         }
 
-                        if (String.valueOf(num1).endsWith(".0")) {
-
-                            txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf("."))));
-
-                        } else {
-                            txtPrevCalc.setText(String.valueOf(num1));
-                        }
+                        roundnum1("");
 
                         txtResultado.setText("");
 
                     }
+
+                } else {
+
+
+                    txtResultado.setText(String.valueOf(txtResultado.getText().toString() + "∛"));
+                    txtResultado.setSelection(txtResultado.length());
 
                 }
 
@@ -870,87 +499,15 @@ public class MainActivity extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(txtResultado.getText().toString())) {
                     txtResultado.setText(String.valueOf(num1));
-                }
-                else if (txtResultado.getText().toString().equals("-")) {
+                } else if (txtResultado.getText().toString().equals("-")) {
                     txtResultado.setText(String.valueOf(-num1));
                 }
-                else if (txtResultado.getText().toString().equals("√")) {
-                    txtResultado.setText(String.valueOf(Math.sqrt(num1)));
-                }
-                else if (txtResultado.getText().toString().equals("-√")) {
-                    txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
-                }
-                else if (txtResultado.getText().toString().equals("∛")) {
-                    txtResultado.setText(String.valueOf(Math.cbrt(num1)));
-                }
-                else if (txtResultado.getText().toString().equals("-∛")) {
-                    txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
-                }
-                else if (txtResultado.getText().toString().startsWith("√")) {
-                    txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                }
-                else if (txtResultado.getText().toString().startsWith("-√")) {
-                    txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
-                }
-                else if (txtResultado.getText().toString().startsWith("∛")) {
-                    txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                }
-                else if (txtResultado.getText().toString().startsWith("-∛")) {
-                    txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
-                }
 
-                switch (op) {
+                doRoot();
 
-                    case 0:
+                switchOP();
 
-                        num1 = Double.valueOf(txtResultado.getText().toString());
-
-                        break;
-
-                    case 1:
-
-                        num1 += Double.valueOf(txtResultado.getText().toString());
-
-                        break;
-
-                    case 2:
-
-                        num1 -= Double.valueOf(txtResultado.getText().toString());
-
-                        break;
-
-                    case 3:
-
-                        num1 *= Double.valueOf(txtResultado.getText().toString());
-
-                        break;
-
-                    case 4:
-
-                        num1 /= Double.valueOf(txtResultado.getText().toString());
-
-                        break;
-
-                    case 5:
-
-                        num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
-
-                        break;
-
-                    default:
-                        break;
-
-                }
-
-
-                if (String.valueOf(num1).endsWith(".0")) {
-
-                    txtPrevCalc.setText(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")));
-
-                }
-                else {
-                    txtPrevCalc.setText(String.valueOf(num1));
-                }
+                roundnum1("");
 
                 txtResultado.setText("");
 
@@ -977,7 +534,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(txtResultado.getText())) {
                     ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    clipboard.setPrimaryClip(ClipData.newPlainText("simple text",txtResultado.getText()));
+                    clipboard.setPrimaryClip(ClipData.newPlainText("simple text", txtResultado.getText()));
                     Toast.makeText(MainActivity.this, "Copiado al portapapeles", Toast.LENGTH_SHORT).show();
                 }
                 return false;
@@ -990,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(txtPrevCalc.getText())) {
                     ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    clipboard.setPrimaryClip(ClipData.newPlainText("simple text",txtPrevCalc.getText()));
+                    clipboard.setPrimaryClip(ClipData.newPlainText("simple text", txtPrevCalc.getText()));
                     Toast.makeText(MainActivity.this, "Copiado al portapapeles", Toast.LENGTH_SHORT).show();
                 }
 
@@ -998,5 +555,147 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        txtResultado.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (s.toString().contains("-.")) {
+
+                    s.insert(s.toString().indexOf("."), "0");
+
+                }
+
+                if (s.toString().contains("√") || s.toString().contains("∛")) {
+
+                    if (s.toString().contains("√.") || s.toString().contains("∛.")) {
+
+                        s.insert(s.toString().indexOf("."), "0");
+
+                    }
+
+                    if (!(s.toString().startsWith("-√") || s.toString().startsWith("-∛"))) {
+
+                        if (!(s.toString().startsWith("√") || s.toString().startsWith("∛"))) {
+
+                            if (s.toString().contains("√")) {
+
+                                s.delete(0, s.toString().indexOf("√"));
+
+                            } else if (s.toString().contains("∛")) {
+
+                                s.delete(0, s.toString().indexOf("∛"));
+
+                            }
+                        }
+
+                    }
+                }
+                else if (s.toString().equals(".")) {
+
+                    txtResultado.setText("0.");
+
+                }
+            }
+        });
     }
+
+
+    public void switchOP() {
+
+        if (op == 0 && txtResultado.getText().toString().startsWith("-")) {
+            op = 1;
+        }
+
+        switch (op) {
+
+            case 0:
+
+                num1 = Double.valueOf(txtResultado.getText().toString());
+
+                break;
+
+            case 1:
+
+                num1 += Double.valueOf(txtResultado.getText().toString());
+
+                break;
+
+            case 2:
+
+                num1 -= Double.valueOf(txtResultado.getText().toString());
+
+                break;
+
+            case 3:
+
+                num1 *= Double.valueOf(txtResultado.getText().toString());
+
+                break;
+
+            case 4:
+
+                num1 /= Double.valueOf(txtResultado.getText().toString());
+
+                break;
+
+            case 5:
+
+                num1 = Math.pow(num1, Double.valueOf(txtResultado.getText().toString()));
+
+                break;
+
+            default:
+                break;
+
+        }
+
+    }
+
+    public void doRoot() {
+
+        if (txtResultado.getText().toString().equals("√")) {
+            txtResultado.setText(String.valueOf(Math.sqrt(num1)));
+        } else if (txtResultado.getText().toString().equals("-√")) {
+            txtResultado.setText(String.valueOf(-Math.sqrt(num1)));
+        } else if (txtResultado.getText().toString().equals("∛")) {
+            txtResultado.setText(String.valueOf(Math.cbrt(num1)));
+        } else if (txtResultado.getText().toString().equals("-∛")) {
+            txtResultado.setText(String.valueOf(-Math.cbrt(num1)));
+        } else if (txtResultado.getText().toString().startsWith("√")) {
+            txtResultado.setText(String.valueOf(Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
+        } else if (txtResultado.getText().toString().startsWith("-√")) {
+            txtResultado.setText(String.valueOf(-Math.sqrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("√") + 1, txtResultado.length())))));
+        } else if (txtResultado.getText().toString().startsWith("∛")) {
+            txtResultado.setText(String.valueOf(Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
+        } else if (txtResultado.getText().toString().startsWith("-∛")) {
+            txtResultado.setText(String.valueOf(-Math.cbrt(Double.valueOf(txtResultado.getText().toString().substring(txtResultado.getText().toString().indexOf("∛") + 1, txtResultado.length())))));
+        }
+
+    }
+
+
+    public void roundnum1(String signo) {
+
+        if (String.valueOf(num1).endsWith(".0")) {
+
+            txtPrevCalc.setText(String.valueOf(String.valueOf(num1).substring(0, String.valueOf(num1).indexOf(".")) + signo));
+
+        } else {
+
+            txtPrevCalc.setText(String.valueOf(num1 + signo));
+
+        }
+
+    }
+
 }
